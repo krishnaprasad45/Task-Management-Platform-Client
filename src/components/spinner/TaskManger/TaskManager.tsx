@@ -13,6 +13,7 @@ interface User {
 }
 
 interface Comment {
+  _id: unknown;
   id: number;
   text: string;
   user: string;
@@ -91,6 +92,7 @@ const TaskManager: React.FC = () => {
         id: Date.now(),
         text: newComment,
         user: user?.username ?? "Anonymous",
+        _id: undefined
       };
       setTask({ ...task, comments: [...task.comments, newC] });
     }
@@ -103,10 +105,30 @@ const TaskManager: React.FC = () => {
     setEditIndex(index);
   };
 
-  const deleteComment = (index: number) => {
+  const deleteComment = async (index: number) => {
+  const commentToDelete = task.comments[index];
+   console.log("commentToDelete>>>",commentToDelete)
+  if (!commentToDelete?._id) {
+    alert("Comment ID not found");
+    return;
+  }
+
+  // Optional: Confirm before deleting
+  if (!window.confirm("Do you really want to delete this comment?")) return;
+
+  try {
+    // Call API
+    await userAxios.delete(`/delete-comment/${commentToDelete._id}`);
+
+    // Update local state
     const updatedComments = task.comments.filter((_, i) => i !== index);
     setTask({ ...task, comments: updatedComments });
-  };
+  } catch (err) {
+    console.error("Error deleting comment:", err);
+    alert("Failed to delete comment");
+  }
+};
+
 
   // Submit task
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
