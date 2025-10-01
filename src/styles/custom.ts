@@ -1,0 +1,86 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const styles: { [key: string]: React.CSSProperties } = {
+  container: {
+    maxWidth: "700px",
+    margin: "40px auto",
+    padding: "20px",
+    borderRadius: "8px",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+    backgroundColor: "#fff",
+    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+  },
+  heading: {
+    textAlign: "center",
+    fontSize: "24px",
+    fontWeight: 600,
+    marginBottom: "20px",
+    color: "#333",
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "15px",
+  },
+  input: {
+    padding: "10px 12px",
+    fontSize: "15px",
+    borderRadius: "6px",
+    border: "1px solid #ccc",
+    outline: "none",
+    width: "100%",
+    boxSizing: "border-box",
+  },
+  row: {
+    display: "flex",
+    gap: "15px",
+    flexWrap: "wrap",
+  },
+  commentSection: {
+    marginTop: "15px",
+  },
+  commentInput: {
+    display: "flex",
+    gap: "10px",
+    marginBottom: "10px",
+  },
+  commentButton: {
+    padding: "10px 16px",
+    backgroundColor: "#4caf50",
+    color: "#fff",
+    border: "none",
+    borderRadius: "6px",
+    cursor: "pointer",
+  },
+  commentList: {
+    listStyle: "none",
+    padding: 0,
+    margin: 0,
+  },
+  commentItem: {
+    display: "flex",
+    justifyContent: "space-between",
+    backgroundColor: "#f7f7f7",
+    padding: "8px 12px",
+    borderRadius: "6px",
+    marginBottom: "6px",
+  },
+  commentAction: {
+    background: "none",
+    border: "none",
+    color: "#2196f3",
+    cursor: "pointer",
+    marginLeft: "6px",
+  },
+  submitButton: {
+    padding: "12px 20px",
+    backgroundColor: "#4caf50",
+    color: "#fff",
+    fontSize: "16px",
+    fontWeight: 600,
+    border: "none",
+    borderRadius: "8px",
+    cursor: "pointer",
+    marginTop: "10px",
+  },
+};
+ export default styles

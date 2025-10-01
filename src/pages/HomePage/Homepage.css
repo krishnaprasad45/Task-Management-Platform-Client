@@ -1,0 +1,167 @@
+.container {
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #f9f9f9;
+}
+
+.heading {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 22px;
+  color: #333;
+}
+
+.taskTable {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+.taskTable th,
+.taskTable td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+}
+
+.taskTable th {
+  background: #eee;
+  font-weight: bold;
+}
+
+.taskTable tr:nth-child(even) {
+  background: #f2f2f2;
+}
+
+.btn {
+  padding: 5px 12px;
+  margin: 3px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.editBtn {
+  background: #4caf50;
+  color: white;
+}
+
+.deleteBtn {
+  background: #f44336;
+  color: white;
+}
+
+.editBtn:hover {
+  background: #45a049;
+}
+
+.deleteBtn:hover {
+  background: #d32f2f;
+}
+
+.confirmOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.confirmBox {
+  background: #fff;
+  padding: 20px 30px;
+  border-radius: 8px;
+  text-align: center;
+  width: 300px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.confirmBox h3 {
+  margin-bottom: 10px;
+}
+
+.confirmActions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.cancelBtn {
+  background: #ccc;
+  color: #000;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.confirmBtn {
+  background: #e74c3c;
+  color: #fff;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cancelBtn:hover {
+  background: #b3b3b3;
+}
+
+.confirmBtn:hover {
+  background: #c0392b;
+}
+
+.headingSection {
+  display: flex;
+  justify-content: center; /* center heading */
+  align-items: center;
+  position: relative; /* needed for absolute positioning of buttons */
+  margin-bottom: 20px;
+}
+
+.heading {
+  margin: 0;
+  text-align: center;
+}
+
+.buttonContainer {
+  position: absolute; /* place buttons on the right */
+  right: 0;
+  display: flex;
+  gap: 15px;
+}
+
+.customBtn {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.newTaskBtn {
+  background-color: #4caf50;
+  color: white;
+}
+
+.newTaskBtn:hover {
+  background-color: #45a049;
+}
+
+.analyseBtn {
+  background-color: #2196f3;
+  color: white;
+}
+
+.analyseBtn:hover {
+  background-color: #0b7dda;
+}
