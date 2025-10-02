@@ -165,3 +165,20 @@
 .analyseBtn:hover {
   background-color: #0b7dda;
 }
+
+
+.avatarBtn {
+  position: absolute;
+  left: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+}
+
+.avatarImg {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}

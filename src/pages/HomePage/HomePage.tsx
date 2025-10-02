@@ -30,7 +30,7 @@ const UserHome: React.FC = () => {
   const user = useSelector((state: RootState) => state.user.currentUser);
   const [tasks, setTasks] = useState<Task[]>([]);
 
-  console.log("taskzz",tasks)
+  console.log("taskzz", tasks);
 
   // Delete popup states
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -88,7 +88,7 @@ const UserHome: React.FC = () => {
     }
   };
 
-   const handleNewTask = () => {
+  const handleNewTask = () => {
     navigate("/teamlead"); // navigates to TaskManagerPage
   };
 
@@ -125,14 +125,20 @@ const UserHome: React.FC = () => {
   return (
     <div className="container">
       <div className="headingSection">
+        <button
+          className="avatarBtn"
+          onClick={() => navigate("/profile")} //  navigate to profile
+        >
+          <img src="https://i.pravatar.cc/40?img=3" alt="User Avatar" className="avatarImg" />
+        </button>
+
         <h2 className="heading">Task List</h2>
+
         <div className="buttonContainer">
-          <button className="customBtn newTaskBtn" onClick={handleNewTask} >
+          <button className="customBtn newTaskBtn" onClick={handleNewTask}>
             New Task
           </button>
-          <button className="customBtn analyseBtn">
-            Analyse
-          </button>
+          <button className="customBtn analyseBtn">Analyse</button>
         </div>
       </div>
 
