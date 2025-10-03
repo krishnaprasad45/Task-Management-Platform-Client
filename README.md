@@ -1,7 +1,8 @@
 <div style="background-color:#f8f9fa; padding: 20px; border-radius: 10px; text-align: left;">
 
 
-[![🚨 WATCH VIDEO NOW! 🚨](https://camo.githubusercontent.com/9e31d4a0d34862e9e08f3e05d5e96f2711e0226cebb62ed8de5e4a2d44e69e33/68747470733a2f2f69332e616d617a6f6e6177732e636f6d2f696d616765732f6261646765732f796f75747562652d57617463682d7265642e676966)](https://youtu.be/WzLPOAYwmik)
+[![Watch Demo](https://img.shields.io/badge/▶-Watch%20Demo-red?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/WzLPOAYwmik)
+
 
 
 
