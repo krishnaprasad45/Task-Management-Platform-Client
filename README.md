@@ -1,5 +1,8 @@
 <div style="background-color:#f8f9fa; padding: 20px; border-radius: 10px; text-align: left;">
 
+[![Watch Demo](https://img.shields.io/badge/YouTube-Demo-red?logo=youtube&logoColor=white&style=for-the-badge)](https://youtu.be/WzLPOAYwmik)
+
+
 <h1 align="left">Frontend - React + TypeScript + Vite 🌟</h1>
 [Click here to see the BACKEND code 🌟](https://github.com/krishnaprasad45/Task-Management-Platform-Server)
 
