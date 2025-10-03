@@ -1,7 +1,7 @@
 <div style="background-color:#f8f9fa; padding: 20px; border-radius: 10px; text-align: left;">
 
 <h1 align="left">Frontend - React + TypeScript + Vite 🌟</h1>
-<a href="https://github.com/krishnaprasad45/Task-Management-Platform-Server"><h2>Click here to see the BACKEND code 🌟</h2></a>
+[Click here to see the BACKEND code 🌟](https://github.com/krishnaprasad45/Task-Management-Platform-Server)
 
 <h2 align="left">Task Management Platform</h2>
 
@@ -62,6 +62,7 @@ To get started with the frontend:
 ## Feedback
 
 If you have any feedback, please reach out to me at krishnaprasadc45@gmail.com <br>
-<a href="https://github.com/krishnaprasad45/Task-Management-Platform-Server"><h1>CLICK HERE TO SEE THE BACKEND CODE 🌟</h1></a>
+[Click here to see the BACKEND code 🌟](https://github.com/krishnaprasad45/Task-Management-Platform-Server)
+
 
 </div>
