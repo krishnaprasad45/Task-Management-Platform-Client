@@ -8,7 +8,6 @@ import { RootState } from "../../store/store";
 const UserCard: React.FC = () => {
   const user = useSelector((state: RootState) => state.user.currentUser);
 
-  console.log("user>>>",user)
   const [editableName, setEditableName] = useState(user?.username);
   const [isEditing, setIsEditing] = useState(false);
 

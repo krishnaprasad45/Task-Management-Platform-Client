@@ -60,7 +60,6 @@ const LoginPage: React.FC = () => {
           password,
         });
 
-        console.log("response>>>", response);
 
         if (response.data.userData && response.data.userData.email) {
           const { email, firstname, _id } = response.data.userData;

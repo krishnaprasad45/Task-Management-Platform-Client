@@ -30,7 +30,6 @@ const UserHome: React.FC = () => {
   const user = useSelector((state: RootState) => state.user.currentUser);
   const [tasks, setTasks] = useState<Task[]>([]);
 
-  console.log("taskzz", tasks);
 
   // Delete popup states
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);

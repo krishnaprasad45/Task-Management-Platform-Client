@@ -33,10 +33,10 @@ interface Task {
 
 const TaskManager: React.FC = () => {
   const user = useSelector((state: RootState) => state.user.currentUser);
-  console.log("user???", user);
   const [users, setUsers] = useState<User[]>([]);
+  const [newComment, setNewComment] = useState("");
+  const [editIndex, setEditIndex] = useState<number | null>(null);
 
-  console.log("userslist>>", users);
   const location = useLocation();
   const taskToEdit = location.state?.taskToEdit;
 
@@ -64,40 +64,13 @@ const TaskManager: React.FC = () => {
     comments: taskToEdit?.comments || [],
   });
 
-  const [newComment, setNewComment] = useState<string>("");
-  const [editIndex, setEditIndex] = useState<number | null>(null);
-
   // Handle task input changes
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setTask((prev: any) => ({
+    setTask((prev) => ({
       ...prev,
       [name]: value,
     }));
-  };
-
-  // Add or update comment
-  // Add or update comment
-  const handleComment = () => {
-    if (!newComment.trim()) return;
-
-    if (editIndex !== null) {
-      // Update existing comment
-      const updatedComments = task.comments.map((c, i) => (i === editIndex ? { ...c, text: newComment } : c));
-      setTask({ ...task, comments: updatedComments });
-      setEditIndex(null);
-    } else {
-      // Add new comment
-      const newC: Comment = {
-        id: Date.now(),
-        text: newComment,
-        user: user?.username ?? "Anonymous",
-        _id: undefined
-      };
-      setTask({ ...task, comments: [...task.comments, newC] });
-    }
-
-    setNewComment("");
   };
 
   const editComment = (index: number) => {
@@ -105,30 +78,61 @@ const TaskManager: React.FC = () => {
     setEditIndex(index);
   };
 
+  const handleCommentSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!newComment.trim()) return;
+
+    try {
+      if (editIndex !== null) {
+        // ✅ Update existing comment
+        const commentId = task.comments[editIndex]._id; // from MongoDB _id
+
+        const response = await userAxios.patch(`/update-comment/${commentId}`, { text: newComment }, { headers: { Authorization: `Bearer ${user?.token}` } });
+
+        // update task state from backend response
+        setTask(response.data.task);
+
+        alert("Comment updated successfully!");
+      } else {
+        // ✅ Add new comment
+        const response = await userAxios.post(`/add-comment/${task._id}`, { text: newComment }, { headers: { Authorization: `Bearer ${user?.token}` } });
+
+        setTask(response.data.task);
+        alert("Comment added successfully!");
+      }
+
+      // reset input & edit state
+      setNewComment("");
+      setEditIndex(null);
+    } catch (error: any) {
+      console.error("Error saving comment:", error.response?.data || error.message);
+      alert("Failed to save comment.");
+    }
+  };
+
   const deleteComment = async (index: number) => {
-  const commentToDelete = task.comments[index];
-   console.log("commentToDelete>>>",commentToDelete)
-  if (!commentToDelete?._id) {
-    alert("Comment ID not found");
-    return;
-  }
+    const commentToDelete = task.comments[index];
+    if (!commentToDelete?._id) {
+      alert("Comment ID not found");
+      return;
+    }
 
-  // Optional: Confirm before deleting
-  if (!window.confirm("Do you really want to delete this comment?")) return;
+    // Optional: Confirm before deleting
+    if (!window.confirm("Do you really want to delete this comment?")) return;
 
-  try {
-    // Call API
-    await userAxios.delete(`/delete-comment/${commentToDelete._id}`);
+    try {
+      // Call API
+      await userAxios.delete(`/delete-comment/${commentToDelete._id}`);
 
-    // Update local state
-    const updatedComments = task.comments.filter((_, i) => i !== index);
-    setTask({ ...task, comments: updatedComments });
-  } catch (err) {
-    console.error("Error deleting comment:", err);
-    alert("Failed to delete comment");
-  }
-};
-
+      // Update local state
+      const updatedComments = task.comments.filter((_, i) => i !== index);
+      setTask({ ...task, comments: updatedComments });
+    } catch (err) {
+      console.error("Error deleting comment:", err);
+      alert("Failed to delete comment");
+    }
+  };
 
   // Submit task
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -201,28 +205,30 @@ const TaskManager: React.FC = () => {
 
         <div style={styles.commentSection}>
           <h3 style={{ marginBottom: "10px" }}>Comments</h3>
-          <div style={styles.commentInput}>
-            <input type="text" value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder="Add comment" style={{ ...styles.input, flex: 1 }} />
-            <button type="button" onClick={handleComment} style={styles.commentButton}>
-              {editIndex !== null ? "Update" : "Add"}
-            </button>
-          </div>
 
+          {/* Comment List */}
           <ul style={styles.commentList}>
             {task.comments.map((c, index) => (
               <li key={c.id} style={styles.commentItem}>
                 <strong>{c.user}:</strong> {c.text}
                 <div>
-                  <button onClick={() => editComment(index)} style={styles.commentAction}>
+                  <button type="button" onClick={() => editComment(index)} style={styles.commentAction}>
                     Edit
                   </button>
-                  <button onClick={() => deleteComment(index)} style={styles.commentAction}>
+                  <button type="button" onClick={() => deleteComment(index)} style={styles.commentAction}>
                     Delete
                   </button>
                 </div>
               </li>
             ))}
           </ul>
+          {/* Single comment input (Add / Update) */}
+          <div style={styles.commentInput}>
+            <input type="text" value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder="Write a comment..." style={{ ...styles.input, flex: 1 }} />
+            <button type="button" onClick={handleCommentSubmit} style={styles.commentButton}>
+              {editIndex !== null ? "Update" : "Add"}
+            </button>
+          </div>
         </div>
 
         <button type="submit" style={{ ...styles.submitButton }}>
