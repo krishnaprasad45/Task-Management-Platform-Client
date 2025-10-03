@@ -2,6 +2,8 @@
 
 [![Watch Demo](https://img.shields.io/badge/YouTube-Demo-red?logo=youtube&logoColor=white&style=for-the-badge)](https://youtu.be/WzLPOAYwmik)
 [![Watch Demo](https://img.shields.io/badge/🎬%20Watch%20Demo-YouTube-red?logo=youtube&logoColor=white&style=for-the-badge)](https://youtu.be/WzLPOAYwmik)
+[![🎬 WATCH VIDEO NOW! 🚀](https://img.shields.io/badge/🎬%20WATCH%20VIDEO%20NOW!-YouTube-red?logo=youtube&logoColor=white&style=for-the-badge)](https://youtu.be/WzLPOAYwmik)
+
 
 
 
