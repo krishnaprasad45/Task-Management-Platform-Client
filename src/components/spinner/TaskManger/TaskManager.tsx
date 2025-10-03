@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
 import { useLocation } from "react-router-dom";
 
-// Define User and Comment types
+// Types
 interface User {
   _id: string;
   firstname: string;
@@ -13,14 +13,14 @@ interface User {
 }
 
 interface Comment {
-  _id: unknown;
+  _id?: string; // optional for new comments
   id: number;
   text: string;
   user: string;
 }
 
-// Task type
 interface Task {
+  _id?: string;
   title: string;
   description: string;
   status: "pending" | "in-progress" | "completed" | "on-hold";
@@ -33,27 +33,12 @@ interface Task {
 
 const TaskManager: React.FC = () => {
   const user = useSelector((state: RootState) => state.user.currentUser);
-  const [users, setUsers] = useState<User[]>([]);
-  const [newComment, setNewComment] = useState("");
-  const [editIndex, setEditIndex] = useState<number | null>(null);
-
   const location = useLocation();
   const taskToEdit = location.state?.taskToEdit;
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const res = await userAxios.get("list-users");
-        setUsers(res.data);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
-
-    fetchUsers();
-  }, []);
-
+  const [users, setUsers] = useState<User[]>([]);
   const [task, setTask] = useState<Task>({
+    _id: taskToEdit?._id,
     title: taskToEdit?.title || "",
     description: taskToEdit?.description || "",
     status: taskToEdit?.status || "pending",
@@ -64,13 +49,63 @@ const TaskManager: React.FC = () => {
     comments: taskToEdit?.comments || [],
   });
 
-  // Handle task input changes
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement>) => {
+  const [newComment, setNewComment] = useState("");
+  const [editIndex, setEditIndex] = useState<number | null>(null);
+
+  // Fetch users
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const res = await userAxios.get("list-users");
+        setUsers(res.data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+    fetchUsers();
+  }, []);
+
+  // Handle input changes
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setTask((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setTask((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Add or edit comment locally / via API
+  const handleCommentSubmit = async () => {
+    if (!newComment.trim()) return;
+
+    if (editIndex !== null) {
+      // ✅ Edit existing comment (via API if comment has _id)
+      const commentToEdit = task.comments[editIndex];
+
+      if (commentToEdit._id) {
+        try {
+          const response = await userAxios.patch(`/update-comment/${commentToEdit._id}`, { text: newComment }, { headers: { Authorization: `Bearer ${user?.token}` } });
+          setTask(response.data.task);
+          alert("Comment updated successfully!");
+        } catch (error: any) {
+          console.error("Error updating comment:", error.response?.data || error.message);
+          alert("Failed to update comment.");
+        }
+      } else {
+        // Local edit for newly added (unsaved) comments
+        const updatedComments = task.comments.map((c, i) => (i === editIndex ? { ...c, text: newComment } : c));
+        setTask({ ...task, comments: updatedComments });
+      }
+
+      setEditIndex(null);
+    } else {
+      // ✅ Add new comment locally
+      const newC: Comment = {
+        id: Date.now(),
+        text: newComment,
+        user: user?.username ?? "Anonymous",
+      };
+      setTask({ ...task, comments: [...task.comments, newC] });
+    }
+
+    setNewComment("");
   };
 
   const editComment = (index: number) => {
@@ -78,78 +113,36 @@ const TaskManager: React.FC = () => {
     setEditIndex(index);
   };
 
-  const handleCommentSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!newComment.trim()) return;
-
-    try {
-      if (editIndex !== null) {
-        // ✅ Update existing comment
-        const commentId = task.comments[editIndex]._id; // from MongoDB _id
-
-        const response = await userAxios.patch(`/update-comment/${commentId}`, { text: newComment }, { headers: { Authorization: `Bearer ${user?.token}` } });
-
-        // update task state from backend response
-        setTask(response.data.task);
-
-        alert("Comment updated successfully!");
-      } else {
-        // ✅ Add new comment
-        const response = await userAxios.post(`/add-comment/${task._id}`, { text: newComment }, { headers: { Authorization: `Bearer ${user?.token}` } });
-
-        setTask(response.data.task);
-        alert("Comment added successfully!");
-      }
-
-      // reset input & edit state
-      setNewComment("");
-      setEditIndex(null);
-    } catch (error: any) {
-      console.error("Error saving comment:", error.response?.data || error.message);
-      alert("Failed to save comment.");
-    }
-  };
-
   const deleteComment = async (index: number) => {
     const commentToDelete = task.comments[index];
-    if (!commentToDelete?._id) {
-      alert("Comment ID not found");
-      return;
+
+    if (commentToDelete._id) {
+      if (!window.confirm("Do you really want to delete this comment?")) return;
+      try {
+        await userAxios.delete(`/delete-comment/${commentToDelete._id}`);
+      } catch (err) {
+        console.error("Error deleting comment:", err);
+        alert("Failed to delete comment");
+        return;
+      }
     }
 
-    // Optional: Confirm before deleting
-    if (!window.confirm("Do you really want to delete this comment?")) return;
-
-    try {
-      // Call API
-      await userAxios.delete(`/delete-comment/${commentToDelete._id}`);
-
-      // Update local state
-      const updatedComments = task.comments.filter((_, i) => i !== index);
-      setTask({ ...task, comments: updatedComments });
-    } catch (err) {
-      console.error("Error deleting comment:", err);
-      alert("Failed to delete comment");
-    }
+    // Remove from local state
+    const updatedComments = task.comments.filter((_, i) => i !== index);
+    setTask({ ...task, comments: updatedComments });
   };
 
   // Submit task
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     try {
       if (taskToEdit) {
-        // Update existing task
         await userAxios.patch(`/update-task/${taskToEdit._id}`, task);
         alert("Task updated successfully!");
       } else {
-        // Create new task
-
         const response = await userAxios.post("/create-task", task);
         console.log("Task created:", response.data);
         alert("Task created successfully!");
-        // Reset task form
         setTask({
           title: "",
           description: "",
@@ -162,8 +155,8 @@ const TaskManager: React.FC = () => {
         });
       }
     } catch (error: any) {
-      console.error("Error creating task:", error.response?.data || error.message);
-      alert("Failed to create task. Check console for details.");
+      console.error("Error creating/updating task:", error.response?.data || error.message);
+      alert("Failed to save task.");
     }
   };
 
@@ -172,8 +165,7 @@ const TaskManager: React.FC = () => {
       <h2 style={styles.heading}>{taskToEdit ? "Update Task" : "Create Task"}</h2>
       <form onSubmit={handleSubmit} style={styles.form}>
         <input type="text" name="title" value={task.title} onChange={handleChange} placeholder="Title *" required style={styles.input} />
-
-        <textarea name="description" value={task.description} onChange={handleChange} placeholder="Description *" required style={{ ...styles.input, height: "100px" }} />
+        <textarea name="description" value={task.description} onChange={handleChange} placeholder="Description *" required style={{ ...styles.input, height: 100 }} />
 
         <div style={styles.row}>
           <select name="status" value={task.status} onChange={handleChange} style={styles.input}>
@@ -204,9 +196,14 @@ const TaskManager: React.FC = () => {
         </div>
 
         <div style={styles.commentSection}>
-          <h3 style={{ marginBottom: "10px" }}>Comments</h3>
+          <h3>Comments</h3>
+          <div style={styles.commentInput}>
+            <input type="text" value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder="Write a comment..." style={{ ...styles.input, flex: 1 }} />
+            <button type="button" onClick={handleCommentSubmit} style={styles.commentButton}>
+              {editIndex !== null ? "Update" : "Add"}
+            </button>
+          </div>
 
-          {/* Comment List */}
           <ul style={styles.commentList}>
             {task.comments.map((c, index) => (
               <li key={c.id} style={styles.commentItem}>
@@ -222,16 +219,9 @@ const TaskManager: React.FC = () => {
               </li>
             ))}
           </ul>
-          {/* Single comment input (Add / Update) */}
-          <div style={styles.commentInput}>
-            <input type="text" value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder="Write a comment..." style={{ ...styles.input, flex: 1 }} />
-            <button type="button" onClick={handleCommentSubmit} style={styles.commentButton}>
-              {editIndex !== null ? "Update" : "Add"}
-            </button>
-          </div>
         </div>
 
-        <button type="submit" style={{ ...styles.submitButton }}>
+        <button type="submit" style={styles.submitButton}>
           {taskToEdit ? "Update Task" : "Create Task"}
         </button>
       </form>
