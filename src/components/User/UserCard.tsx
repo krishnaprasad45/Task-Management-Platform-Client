@@ -29,6 +29,7 @@ const UserCard: React.FC = () => {
         )}
         <p className="userEmail">{user?.email}</p>
       </div>
+        <p className="">{user?.email}</p>
 
       <button className="logoutBtn" >
         Logout

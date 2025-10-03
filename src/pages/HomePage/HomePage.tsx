@@ -30,7 +30,6 @@ const UserHome: React.FC = () => {
   const user = useSelector((state: RootState) => state.user.currentUser);
   const [tasks, setTasks] = useState<Task[]>([]);
 
-
   // Delete popup states
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
@@ -121,15 +120,32 @@ const UserHome: React.FC = () => {
     }
   };
 
+  const handleClick = () => {
+    navigate("/analytics");
+  };
+
+  const handleLogout = () => {
+    // Clear user data from localStorage
+    localStorage.removeItem("usertoken");
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userId");
+
+    // Navigate to login page and pass email in state
+    navigate("/login", { state: { data: localStorage.getItem("userEmail") } });
+  };
+
   return (
     <div className="container">
       <div className="headingSection">
-        <button
-          className="avatarBtn"
-          onClick={() => navigate("/profile")} //  navigate to profile
-        >
-          <img src="https://i.pravatar.cc/40?img=3" alt="User Avatar" className="avatarImg" />
-        </button>
+        <div className="avatarContainer">
+          <button className="avatarBtn" onClick={() => navigate("/profile")}>
+            <img src="https://i.pravatar.cc/40?img=3" alt="User Avatar" className="avatarImg" />
+          </button>
+          <button className="logoutBtn" onClick={handleLogout}>
+            Logout
+          </button>
+        </div>
 
         <h2 className="heading">Task List</h2>
 
@@ -137,7 +153,9 @@ const UserHome: React.FC = () => {
           <button className="customBtn newTaskBtn" onClick={handleNewTask}>
             New Task
           </button>
-          <button className="customBtn analyseBtn">Analyse</button>
+          <button className="customBtn analyseBtn" onClick={handleClick}>
+            Analyse
+          </button>
         </div>
       </div>
 
