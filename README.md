@@ -56,7 +56,6 @@ Task Management Platform is a web application designed to help teams efficiently
 - **User Authentication:** Signup, login, and profile management with JWT-based authorization.
 - **Task Management:** Create, update, and delete tasks with priority, status, due date, and assignment tracking.
 - **Comment System:** Add, edit, and delete comments for tasks to facilitate communication.
-- **User Assignment:** Assign tasks to team members from a dynamic user list.
 - **Responsive UI:** Clean and responsive frontend using Tailwind CSS and React components.
 - **State Management:** Uses Redux for centralized state handling and efficient data flow.
 
