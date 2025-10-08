@@ -1,15 +1,5 @@
 <div style="background-color:#f8f9fa; padding: 20px; border-radius: 10px; text-align: left;">
 
-
-[![Watch Demo](https://img.shields.io/badge/▶-Watch%20Demo-red?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/WzLPOAYwmik)
-[![Watch Demo](https://img.shields.io/badge/▶-Watch%20Demo-red?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/WzLPOAYwmik)
-
-
-
-
-
-
-
 <h1 align="left">Frontend - React + TypeScript + Vite 🌟</h1>
 [Click here to see the BACKEND code 🌟](https://github.com/krishnaprasad45/Task-Management-Platform-Server)
 
@@ -71,7 +61,7 @@ To get started with the frontend:
 ## Feedback
 
 If you have any feedback, please reach out to me at krishnaprasadc45@gmail.com <br>
-[Click here to see the BACKEND code 🌟](https://github.com/krishnaprasad45/Task-Management-Platform-Server)
+
 
 
 </div>
